@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dropdown, Menu, Space, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import { history } from 'umi';
+import { constant } from '../../pages/utils/constant';
 
 const TopMenu = (props) => {
   const { menuData, language, handleLanguage } = props;
@@ -37,6 +39,10 @@ const TopMenu = (props) => {
     />
   );
 
+  const handleMenu = ({ item, key, keyPath, domEvent }) => {
+    history.push(key);
+  };
+
   return (
     <div
       style={{
@@ -51,9 +57,10 @@ const TopMenu = (props) => {
         defaultSelectedKeys={['1']}
         items={menuData.map((item) => ({
           key: item.key,
-          label: item.text,
+          label: language === 'en' ? item.text : constant[item.text],
         }))}
         style={{ width: '80%' }}
+        onClick={handleMenu}
       />
       <Space size={16}>
         <Button onClick={handleLanguage}>

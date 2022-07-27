@@ -9,7 +9,7 @@ import moment from 'moment';
 import 'moment/locale/zh-cn';
 
 import TopMenu from './topMenu';
-import SideMenu from './sideMenu';
+// import SideMenu from './sideMenu';
 import menuData from './menuData';
 import './baseLayout.less';
 
@@ -46,9 +46,8 @@ const BaseLayout = (props) => {
         />
         <Layout>
           {/* <SideMenu /> */}
-          <Content style={{ height: '100vh' }}>{children}</Content>
+          <Content style={{ height: 'calc(100vh - 86px)' }}>{children}</Content>
         </Layout>
-        <Footer>底部</Footer>
       </Layout>
     );
   };
