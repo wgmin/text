@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
-import { Tree, Button, Space, Input } from 'antd';
-import { CloseCircleOutlined, EditOutlined } from '@ant-design/icons';
+import { Tree, Space, Input } from 'antd';
+import { CloseCircleOutlined } from '@ant-design/icons';
 import './index.less';
 
 const defaultTreeData = [
   {
     title: '宇宙无敌yyds',
-    key: '1',
-    children: [],
+    key: 1,
+    children: [
+      {
+        title: '子部门',
+        key: 2,
+        children: [],
+      },
+    ],
   },
 ];
 
 const Home = () => {
   const [treeData, setTreeData] = useState(defaultTreeData);
-  const [index, setIndex] = useState(2); // key值
-  const [modifyKey, setModifyKey] = useState(-1); // 修改的key值
+  const [index, setIndex] = useState(3); // key值
+  const [modifyKey, setModifyKey] = useState(-1); // 修改的key值 F
   const [value, setValue] = useState(''); // 输入框里面的值
+  const [expandedKeys, setExpandedKeys] = useState([]);
 
   // 复制树
   const copyTree = (node) => {
@@ -99,7 +106,7 @@ const Home = () => {
         };
         break;
       }
-      handleDel(treeData[i].children, key, value);
+      handleModify(treeData[i].children, key, value);
     }
   };
 
@@ -125,6 +132,7 @@ const Home = () => {
           key: index,
           children: [],
         });
+        setModifyKey(index);
         setIndex(index + 1);
         break;
       } else {
@@ -141,6 +149,7 @@ const Home = () => {
     setValue(val);
   };
 
+  // 输入框值发生改变
   const onChange = (e) => {
     setValue(e.target.value);
   };
@@ -160,12 +169,13 @@ const Home = () => {
           </div>
         ) : (
           <Input
+            style={{ width: 150 }}
             value={value}
             onPressEnter={(e) => {
               onPressEnter(e, key);
             }}
             onChange={onChange}
-            style={{ width: 150 }}
+            ref={inputRef}
           />
         )}
         <Space size={8}>
@@ -183,7 +193,12 @@ const Home = () => {
             className="operate"
             onClick={() => {
               if (modifyKey === key) return;
-              addNext(key, treeData);
+              if (!expandedKeys.includes(key)) {
+                setExpandedKeys([...expandedKeys, key]);
+              }
+              const newTree = copyTree(treeData);
+              addNext(key, newTree);
+              setTreeData(newTree);
             }}
             disabled={modifyKey === key}
           >
@@ -199,14 +214,6 @@ const Home = () => {
           >
             修改当前节点
           </a>
-          <EditOutlined
-            className="operate"
-            onClick={() => {
-              if (modifyKey === key) return;
-              modify(key, title);
-            }}
-            disabled={modifyKey === key}
-          />
           <CloseCircleOutlined
             onClick={() => del(nodeData)}
             className="operate"
@@ -216,18 +223,19 @@ const Home = () => {
     );
   };
 
+  const onExpand = (expandedKey, { expanded, node }) => {
+    setExpandedKeys(expandedKey);
+  };
+
   return (
     <div className="treeCard">
-      <Button>123</Button>
       <Tree
-        showLine
         blockNode
         selectable={false}
         titleRender={titleRender}
-        defaultExpandedKeys={['0-0-0', '0-0-1']}
-        defaultSelectedKeys={['0-0-0', '0-0-1']}
-        defaultCheckedKeys={['0-0-0', '0-0-1']}
         treeData={treeData}
+        expandedKeys={expandedKeys}
+        onExpand={onExpand}
       />
     </div>
   );

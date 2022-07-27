@@ -3,19 +3,25 @@
   background-color: #fff;
   width: 600px;
 }
+
 .titleRender {
   display: flex;
   justify-content: space-between;
+  padding: 4px 8px;
+
   .title {
     width: 150px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
   .operate {
+    flex: 1;
     color: #1890ff;
   }
-  // .operate:hover{
-  //   color: #1890ff;
-  // }
+}
+
+.titleRender:hover {
+  background-color: #f5f5f5;
 }
